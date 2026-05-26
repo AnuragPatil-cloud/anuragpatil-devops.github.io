@@ -525,21 +525,232 @@
   }
   @media (max-width: 600px) {
     .nav-links { display: none; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,12,16,0.97);
+      backdrop-filter: blur(20px);
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      z-index: 99;
+      animation: menuIn 0.3s ease;
+    }
+    .nav-links.open a { font-size: 1.2rem; }
     h1.hero-name { font-size: 2.8rem; }
     .exp-header { flex-direction: column; }
     .exp-meta { text-align: left; }
+  }
+  @keyframes menuIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    z-index: 200;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 600px) { .hamburger { display: flex; } }
+
+  /* TYPING CURSOR */
+  .typing-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background: var(--accent);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* SCROLL PROGRESS BAR */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* BACK TO TOP */
+  #back-top {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    z-index: 500;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, border-color 0.2s, transform 0.2s;
+    font-size: 1rem; color: var(--muted);
+  }
+  #back-top.visible { opacity: 1; pointer-events: all; }
+  #back-top:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+
+  /* PARTICLE CANVAS */
+  #particle-canvas {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  /* SKILL TAG HOVER GLOW */
+  .tag {
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .tag:hover {
+    background: rgba(0,229,255,0.12);
+    border-color: rgba(0,229,255,0.4);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* TIMELINE for experience */
+  .exp-list { position: relative; }
+  .exp-list::before {
+    content: '';
+    position: absolute;
+    left: -2rem; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    opacity: 0.25;
+  }
+  @media (max-width: 900px) { .exp-list::before { display: none; } }
+
+  /* GLITCH effect on name hover */
+  h1.hero-name:hover span {
+    animation: glitch 0.4s steps(2) 1;
+  }
+  @keyframes glitch {
+    0%   { text-shadow: 2px 0 var(--accent2), -2px 0 var(--accent3); }
+    25%  { text-shadow: -2px 0 var(--accent2),  2px 0 var(--accent3); }
+    50%  { text-shadow: 2px 0 transparent; clip-path: inset(30% 0 40% 0); }
+    75%  { text-shadow: -2px 0 var(--accent); }
+    100% { text-shadow: none; }
+  }
+
+  /* TOOLTIP for stat numbers */
+  .stat { position: relative; }
+  .stat::after {
+    content: attr(data-tip);
+    position: absolute;
+    right: 0; top: -2rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--accent);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .stat:hover::after { opacity: 1; transform: translateY(0); }
+
+  /* COPY feedback */
+  .copy-toast {
+    position: fixed;
+    bottom: 5rem; right: 2rem;
+    background: var(--card);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+  }
+  .copy-toast.show { opacity: 1; transform: translateY(0); }
+
+  /* NAV active highlight */
+  .nav-links a.active { color: var(--accent) !important; }
+  .nav-links a.active::after { width: 100% !important; }
+
+  /* Skill card shine sweep */
+  .skill-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(0,229,255,0.04) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .skill-card:hover::after { transform: translateX(100%); }
+
+  /* Contact link copy */
+  .contact-link { position: relative; }
+  .contact-link .copy-hint {
+    position: absolute;
+    right: 1.25rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .contact-link:hover .copy-hint { opacity: 1; }
+
+  /* Animated border on edu-card */
+  .edu-card {
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .edu-card:hover {
+    border-color: rgba(0,229,255,0.35);
+    box-shadow: 0 0 40px rgba(0,229,255,0.06);
   }
 </style>
 </head>
 <body>
 
+<div id="progress-bar"></div>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
+<canvas id="particle-canvas"></canvas>
+<div id="back-top" title="Back to top">↑</div>
+<div class="copy-toast" id="copy-toast">Copied!</div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">AP // DevOps</div>
-  <ul class="nav-links">
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -547,6 +758,7 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
+
 
 <!-- HERO -->
 <section id="hero">
@@ -559,8 +771,8 @@
     <h1 class="hero-name">
       Anurag<span>Patil.</span>
     </h1>
-    <p class="hero-role">
-      Kubernetes &amp; AWS Infrastructure &bull; <em>CI/CD Automation</em> &bull; Cloud-Native Deployments
+    <p class="hero-role" id="hero-role">
+      <span id="typed-role"></span><span class="typing-cursor"></span>
     </p>
     <p class="hero-desc">
       3+ years building scalable, containerized microservices on Kubernetes and AWS. I keep systems running, pipelines humming, and dashboards meaningful.
@@ -572,16 +784,16 @@
   </div>
 
   <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">3+</div>
+    <div class="stat" data-tip="Years in DevOps">
+      <div class="stat-num" data-count="3">0+</div>
       <div class="stat-label">Years DevOps</div>
     </div>
-    <div class="stat">
-      <div class="stat-num">10+</div>
+    <div class="stat" data-tip="Cloud resources managed">
+      <div class="stat-num" data-count="10">0+</div>
       <div class="stat-label">Cloud Resources</div>
     </div>
-    <div class="stat">
-      <div class="stat-num">3</div>
+    <div class="stat" data-tip="Environments maintained">
+      <div class="stat-num" data-count="3">0</div>
       <div class="stat-label">Environments Managed</div>
     </div>
   </div>
@@ -864,20 +1076,22 @@
     </div>
 
     <div class="contact-links reveal">
-      <a href="mailto:anurag.patil.devops@gmail.com" class="contact-link">
+      <a href="mailto:anurag.patil.devops@gmail.com" class="contact-link" data-copy="anurag.patil.devops@gmail.com">
         <div class="contact-link-icon">✉️</div>
         <div class="contact-link-info">
           <label>Email</label>
           <span>anurag.patil.devops@gmail.com</span>
         </div>
+        <span class="copy-hint">Copy</span>
       </a>
 
-      <a href="tel:+919226521573" class="contact-link">
+      <a href="tel:+919226521573" class="contact-link" data-copy="+919226521573">
         <div class="contact-link-icon">📞</div>
         <div class="contact-link-info">
           <label>Phone</label>
           <span>+91-9226521573</span>
         </div>
+        <span class="copy-hint">Copy</span>
       </a>
 
       <a href="https://www.linkedin.com/in/anuragpatil-devops" target="_blank" class="contact-link">
@@ -886,6 +1100,7 @@
           <label>LinkedIn</label>
           <span>linkedin.com/in/anuragpatil-devops</span>
         </div>
+        <span class="copy-hint">Open ↗</span>
       </a>
 
       <a href="https://github.com/AnuragPatil-cloud" target="_blank" class="contact-link">
@@ -894,6 +1109,7 @@
           <label>GitHub</label>
           <span>github.com/AnuragPatil-cloud</span>
         </div>
+        <span class="copy-hint">Open ↗</span>
       </a>
     </div>
   </div>
@@ -906,14 +1122,15 @@
 </footer>
 
 <script>
-  // CUSTOM CURSOR
+  /* ── CUSTOM CURSOR ─────────────────────────────────── */
   const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
+  const ring   = document.getElementById('cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
+  let cursorScale = 1;
 
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px) scale(${cursorScale})`;
   });
 
   function animateRing() {
@@ -926,19 +1143,32 @@
 
   document.querySelectorAll('a, button, .skill-card, .exp-card, .contact-link').forEach(el => {
     el.addEventListener('mouseenter', () => {
-      cursor.style.transform += ' scale(1.5)';
-      ring.style.width = '56px';
-      ring.style.height = '56px';
-      ring.style.opacity = '0.8';
+      cursorScale = 1.5;
+      cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px) scale(1.5)`;
+      ring.style.width = '56px'; ring.style.height = '56px'; ring.style.opacity = '0.8';
     });
     el.addEventListener('mouseleave', () => {
-      ring.style.width = '36px';
-      ring.style.height = '36px';
-      ring.style.opacity = '0.5';
+      cursorScale = 1;
+      ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '0.5';
     });
   });
 
-  // SCROLL REVEAL
+  /* ── SCROLL PROGRESS BAR ───────────────────────────── */
+  const progressBar = document.getElementById('progress-bar');
+  function updateProgress() {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (window.scrollY / total * 100) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  /* ── BACK TO TOP ───────────────────────────────────── */
+  const backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ── SCROLL REVEAL ─────────────────────────────────── */
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -950,18 +1180,165 @@
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
 
-  // ACTIVE NAV
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
+  /* ── ACTIVE NAV ────────────────────────────────────── */
+  const sections  = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-links a');
+  function updateNav() {
     let current = '';
-    sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - 200) current = sec.id;
-    });
+    sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 200) current = sec.id; });
     navLinks.forEach(a => {
-      a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--accent)' : '';
+      const active = a.getAttribute('href') === `#${current}`;
+      a.classList.toggle('active', active);
+    });
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  /* ── HAMBURGER MENU ────────────────────────────────── */
+  const hamburger = document.getElementById('hamburger');
+  const navList   = document.getElementById('nav-links');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navList.classList.toggle('open');
+  });
+  navList.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navList.classList.remove('open');
     });
   });
+
+  /* ── TYPING ANIMATION ──────────────────────────────── */
+  const roles = [
+    'Kubernetes & AWS Infrastructure',
+    'CI/CD Automation Engineer',
+    'Cloud-Native Deployments',
+    'DevOps Problem Solver',
+  ];
+  const typedEl = document.getElementById('typed-role');
+  let roleIdx = 0, charIdx = 0, deleting = false;
+  function typeLoop() {
+    const role = roles[roleIdx];
+    if (!deleting) {
+      typedEl.textContent = role.slice(0, ++charIdx);
+      if (charIdx === role.length) { deleting = true; return setTimeout(typeLoop, 1800); }
+    } else {
+      typedEl.textContent = role.slice(0, --charIdx);
+      if (charIdx === 0) { deleting = false; roleIdx = (roleIdx + 1) % roles.length; }
+    }
+    setTimeout(typeLoop, deleting ? 40 : 70);
+  }
+  typeLoop();
+
+  /* ── COUNTER ANIMATION ─────────────────────────────── */
+  const counters = document.querySelectorAll('.stat-num[data-count]');
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el  = entry.target;
+      const end = parseInt(el.dataset.count);
+      const suffix = el.textContent.includes('+') ? '+' : '';
+      let start = 0;
+      const step = Math.ceil(end / 30);
+      const tick = () => {
+        start = Math.min(start + step, end);
+        el.textContent = start + suffix;
+        if (start < end) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      counterObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterObs.observe(c));
+
+  /* ── COPY TO CLIPBOARD ─────────────────────────────── */
+  const toast = document.getElementById('copy-toast');
+  let toastTimer;
+  function showToast(msg = 'Copied!') {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+  document.querySelectorAll('.contact-link[data-copy]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      navigator.clipboard.writeText(link.dataset.copy).then(() => showToast('Copied to clipboard!'));
+    });
+  });
+
+  /* ── PARTICLE CANVAS ───────────────────────────────── */
+  const canvas = document.getElementById('particle-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resizeCanvas() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.r  = Math.random() * 1.2 + 0.3;
+      this.vx = (Math.random() - 0.5) * 0.25;
+      this.vy = (Math.random() - 0.5) * 0.25;
+      this.a  = Math.random() * 0.5 + 0.1;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,229,255,${this.a})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+  function drawLines() {
+    const dist = 120;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < dist) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0,229,255,${0.08 * (1 - d / dist)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawLines();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  /* ── NAV HIDE ON SCROLL DOWN ───────────────────────── */
+  let lastY = 0;
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    nav.style.transform = y > lastY && y > 100 ? 'translateY(-100%)' : 'translateY(0)';
+    nav.style.transition = 'transform 0.35s ease';
+    lastY = y;
+  }, { passive: true });
 </script>
 </body>
 </html>
